@@ -1,0 +1,24 @@
+[app]
+title = NSP Box
+package.name = nspbox
+package.domain = org.nspbox
+source.dir = .
+source.include_exts = py,png
+source.exclude_dirs = .github,bin,.buildozer
+version = 4.0.0-android
+requirements = python3,kivy==2.3.0,pillow,pyjnius,android
+icon.filename = %(source.dir)s/icon.png
+orientation = portrait
+fullscreen = 0
+
+# "All files access" is needed to read game folders and write multi-GiB NSPs.
+android.permissions = MANAGE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,WAKE_LOCK
+android.api = 34
+android.minapi = 26
+android.archs = arm64-v8a
+android.accept_sdk_license = True
+android.allow_backup = False
+
+[buildozer]
+log_level = 2
+warn_on_root = 1
