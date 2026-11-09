@@ -11,13 +11,15 @@ icon.filename = %(source.dir)s/icon.png
 orientation = portrait
 fullscreen = 0
 
-# "All files access" is needed to read game folders and write multi-GiB NSPs.
 android.permissions = MANAGE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE,WAKE_LOCK
-android.api = 34
+android.api = 33
 android.minapi = 26
+android.ndk = 25b
 android.archs = arm64-v8a
 android.accept_sdk_license = True
 android.allow_backup = False
+
+p4a.branch = v2024.01.21
 
 [buildozer]
 log_level = 2
