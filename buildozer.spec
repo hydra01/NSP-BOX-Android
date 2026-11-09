@@ -5,7 +5,7 @@ package.domain = org.nspbox
 source.dir = .
 source.include_exts = py,png
 source.exclude_dirs = .github,bin,.buildozer
-version = 4.0.0-android
+version = 4.0.0
 requirements = python3,kivy==2.3.0,pillow,pyjnius,android
 icon.filename = %(source.dir)s/icon.png
 orientation = portrait
