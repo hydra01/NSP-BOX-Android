@@ -4,9 +4,9 @@ package.name = nspbox
 package.domain = org.nspbox
 source.dir = .
 source.include_exts = py,png
-source.exclude_dirs = .github,bin,.buildozer
-version = 4.0.0
-requirements = python3,kivy==2.3.0,pillow,pyjnius,android
+source.exclude_dirs = .github,bin,.buildozer,recipes
+version = 4.0.1
+requirements = python3,kivy==2.3.0,pillow,pyjnius,android,zstandard
 icon.filename = %(source.dir)s/icon.png
 orientation = portrait
 fullscreen = 0
@@ -20,6 +20,7 @@ android.accept_sdk_license = True
 android.allow_backup = False
 
 p4a.branch = v2024.01.21
+p4a.local_recipes = ./recipes
 
 [buildozer]
 log_level = 2

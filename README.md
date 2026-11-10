@@ -12,8 +12,15 @@ touch interface built with Kivy.
 Included: game snapshot scan, title/version editing, artwork (centered crop or fit),
 NSP build with verification, optional package folder with `main.npdm`, cancel, automatic
 numbering if the output name exists.
-Not included: DLC tab, NUP tools, Windows emulator patching, and the interactive crop editor
+NUP tools tab: NSP to NUP, game folder to NUP, NUP to NSP, NUP to folder, and inspect/verify,
+with Fast / Balanced / Smaller compression.
+Not included: DLC tab, Windows emulator patching, and the interactive crop editor
 (these are Windows-specific or need a larger rewrite).
+
+NUP compression uses the `zstandard` library, which python-for-android does not ship, so this
+project carries its own build recipe in `recipes/zstandard/`. If that part of the cloud build ever
+fails, delete `,zstandard` from `requirements` and the `p4a.local_recipes` line in
+`buildozer.spec`: the app then builds without NUP and says so on the NUP tab.
 
 ## Build the APK (no PC setup needed)
 1. Create a new GitHub repository and upload everything in this folder

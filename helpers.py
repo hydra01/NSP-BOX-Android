@@ -30,7 +30,7 @@ def default_output_dir() -> str:
     return str(Path.cwd() / 'NSPBox')
 
 
-def list_directory(path, want_files=False):
+def list_directory(path, want_files=False, exts=IMAGE_EXTS):
     """Return (folders, files) sorted case-insensitively; never raises on bad entries."""
     folders, files = [], []
     try:
@@ -41,7 +41,7 @@ def list_directory(path, want_files=False):
                         continue
                     if entry.is_dir():
                         folders.append(entry.name)
-                    elif want_files and entry.name.lower().endswith(IMAGE_EXTS):
+                    elif want_files and entry.name.lower().endswith(tuple(exts)):
                         files.append(entry.name)
                 except OSError:
                     continue
@@ -59,14 +59,53 @@ def human_size(n: int) -> str:
         n /= 1024
 
 
-def unique_output(out_dir, stem, package_folder=False):
-    """Pick an output path that does not exist yet: 'Game.nsp', 'Game (2).nsp', ..."""
+def unique_output(out_dir, stem, package_folder=False, ext='.nsp'):
+    """Pick an output path that does not exist yet: 'Game.nsp', 'Game (2).nsp', ...
+    ext='' gives a folder-style name (used for extraction)."""
     out_dir = Path(out_dir)
     for n in range(1, 1000):
         name = stem if n == 1 else f'{stem} ({n})'
-        taken = (out_dir / (name + '.nsp')).exists()
+        taken = (out_dir / (name + ext)).exists()
         if package_folder:
             taken = taken or (out_dir / name).exists()
         if not taken:
-            return out_dir / (name + '.nsp')
+            return out_dir / (name + ext)
     raise ValueError('Too many existing outputs with this name. Choose another folder.')
+
+
+# ---- NUP tab -------------------------------------------------------------------------
+# label -> (operation key, input kind, input extensions, output extension)
+NUP_OPS = {
+    'NSP to NUP':          ('nsp_to_nup', 'file', ('.nsp',), '.nup'),
+    'Game folder to NUP':  ('pack',       'dir',  (),         '.nup'),
+    'NUP to NSP':          ('nup_to_nsp', 'file', ('.nup',), '.nsp'),
+    'NUP to folder':       ('extract',    'file', ('.nup',), ''),
+    'Inspect / verify NUP': ('inspect',   'file', ('.nup',), None),
+}
+NUP_COMPRESSION = ('Fast', 'Balanced', 'Smaller')
+
+
+def nup_output_path(op_label, input_path, out_dir):
+    """Auto-named, never-overwriting output path for a NUP operation (None for inspect)."""
+    _key, _kind, _exts, out_ext = NUP_OPS[op_label]
+    if out_ext is None:
+        return None
+    stem = safe_filename(Path(input_path).stem if Path(input_path).suffix else Path(input_path).name)
+    return unique_output(out_dir, stem, ext=out_ext)
+
+
+def format_nup_result(op_label, result):
+    """Readable summary of an engine result dict."""
+    import json
+    if NUP_OPS[op_label][0] == 'inspect':
+        return json.dumps(result, indent=1, default=str)[:3000]
+    lines = [f"Saved: {result.get('output', '')}"]
+    if 'size' in result:
+        lines.append(f"Size: {human_size(result['size'])}")
+    if result.get('source_size'):
+        lines.append(f"Original data: {human_size(result['source_size'])}")
+    if 'packages' in result:
+        lines.append(f"Packages: {result['packages']}")
+    if 'verified' in result:
+        lines.append(f"Verified: {'yes' if result['verified'] else 'skipped'}")
+    return '\n'.join(lines)
