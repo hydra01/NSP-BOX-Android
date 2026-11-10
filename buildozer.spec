@@ -1,11 +1,11 @@
 [app]
-title = NSP Box
+title = ZIP to NUP
 package.name = nspbox
 package.domain = org.nspbox
 source.dir = .
 source.include_exts = py,png
-source.exclude_dirs = .github,bin,.buildozer,recipes
-version = 4.0.1
+source.exclude_dirs = .github,bin,.buildozer,recipes,extras
+version = 4.1.0
 requirements = python3,kivy==2.3.0,pillow,pyjnius,android,zstandard
 icon.filename = %(source.dir)s/icon.png
 orientation = portrait
